@@ -8,6 +8,10 @@ the `SudokuProblem` class in [`solpoku.py`](/solpoku.py) handles the problem for
 
 the `from_csv` and `from_json` class methods are provided to facilitate handling of input files. `from_array` handles input `numpy` arrays. the `solve` method performs the optimization and builds a 9x9 `numpy` array with the proposed solution.
 
+the [`gui.py`](/gui.py) script provides a simple GUI using [`tkinter`](https://docs.python.org/es/3.13/library/tkinter.html). run it to launch it. click on the grid to change the numbers; click on "Solve" to fill the sudoku.
+
+empty tiles are represented with zeros.
+
 ## Dependencies
 
 a pre-made environment can be set up with:
@@ -22,7 +26,6 @@ other versions may work too. however, Python ≥3.10 is required.
 
 run `solpoku.py` to solve the following sudoku three times:
 a) hard-coded in the script, b) read from a [CSV](/test/sudoku.csv) file
-(here zeros represent empty tiles)
 and c) read from a [JSON](/test/sudoku.json) file:
 
 | | | | | | | | | |

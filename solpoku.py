@@ -101,13 +101,16 @@ class SudokuProblem:
         problem.set_objective(varnames)
         return problem
 
+    def set_objective_from_array(self, array: np.ndarray):
+        self.set_objective(
+            [f"v{i+1}{j+1}{array[i, j]}" for i, j in np.ndindex(array.shape) if array[i, j] != 0]
+        )
+
     @classmethod
     def from_array(cls, array: np.ndarray):
         assert array.shape == (9, 9), "array is not 9x9"
         problem = cls()
-        problem.set_objective(
-            [f"v{i+1}{j+1}{array[i, j]}" for i, j in np.ndindex(array.shape) if array[i, j] != 0]
-        )
+        problem.set_objective_from_array(array)
         return problem
 
     def to_json(self, path: str, indent=True):
