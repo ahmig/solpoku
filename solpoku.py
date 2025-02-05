@@ -101,15 +101,18 @@ class SudokuProblem:
         problem.set_objective(varnames)
         return problem
 
+    @classmethod
+    def from_array(cls, array: np.ndarray):
+        assert array.shape == (9, 9), "array is not 9x9"
+        problem = cls()
+        problem.set_objective(
+            [f"v{i+1}{j+1}{array[i, j]}" for i, j in np.ndindex(array.shape) if array[i, j] != 0]
+        )
+        return problem
+
     def to_json(self, path: str, indent=True):
         with open(path, "w") as fw:
             json.dump(self._model.to_json(), fw, indent=indent)
-
-    def input_sudoku(self, array: np.ndarray):
-        assert array.shape == (9, 9), "array is not 9x9"
-        self.set_objective(
-            [f"v{i+1}{i+2}{array[i, j]}" for i, j in np.ndindex(array.shape) if array[i, j] != 0]
-        )
 
     def _build_sudoku_matrix(self) -> np.ndarray :
         solution = np.zeros((9, 9), dtype=np.uint8)
@@ -131,6 +134,7 @@ class SudokuProblem:
 if __name__ == "__main__":
     logging.basicConfig(filename="log.txt", filemode="w", level=logging.DEBUG)
     
+    print("solving hard-coded sudoku")
     sudoku = SudokuProblem()
     sudoku.set_objective(
         [   f"v{str(rcn)}" for rcn in [
@@ -147,26 +151,22 @@ if __name__ == "__main__":
         ]
     )
     solution = sudoku.solve()
-
-    print("solving hard-coded sudoku")
     print("status:", sudoku._model.status)
     print("objective value:", sudoku._model.objective.value)
     print(solution)
     print("--------------------")
 
+    print("solving sudoku from JSON")
     json_sudoku = SudokuProblem.from_json("test/sudoku.json")
     json_solution = json_sudoku.solve()
-
-    print("solving sudoku from JSON")
     print("status:", json_sudoku._model.status)
     print("objective value:", json_sudoku._model.objective.value)
     print(json_solution)
     print("--------------------")
 
+    print("solving sudoku from CSV")
     csv_sudoku = SudokuProblem.from_csv("test/sudoku.csv")
     csv_solution = csv_sudoku.solve()
-
-    print("solving sudoku from CSV")
     print("status:", csv_sudoku._model.status)
     print("objective value:", csv_sudoku._model.objective.value)
     print(csv_solution)
